@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   Legend,
   ReferenceLine,
+  ReferenceDot
 } from "recharts";
 
 // A small fade animation for the advanced settings
@@ -318,6 +319,8 @@ export default function MembraneCalculator() {
             <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
             <XAxis
               dataKey="year"
+              type="number"        // <--- Force numeric scale
+              domain={[1, 30]}     // <--- 1 to 30
               label={{ value: "År", position: "insideBottom", offset: -5 }}
               tick={{ fontSize: 14 }}
             />
@@ -338,12 +341,23 @@ export default function MembraneCalculator() {
                 position: "relative"
               }}
             />
+            {/* This vertical line helps mark the break-even year */}
             <ReferenceLine
               x={breakEvenYears}
-              stroke="red"
+              stroke="green"
               strokeDasharray="3 3"
-              label={{ value: "Break-even", position: "top", fill: "red" }}
+              label={{ value: "Break-even", position: "top", fill: "green" }}
             />
+            {/* This dot helps visually emphasize the break-even point if it's between 1 and 30 */}
+            {breakEvenYears >= 1 && breakEvenYears <= 30 && (
+              <ReferenceDot
+                x={breakEvenYears}
+                y={yearlySavings * breakEvenYears}
+                r={6}
+                fill="green"
+                stroke="none"
+              />
+            )}
             <Line
               type="monotone"
               dataKey="savings"
